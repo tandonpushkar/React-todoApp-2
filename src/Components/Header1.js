@@ -1,4 +1,5 @@
 import React from "react";
+import { Button, Icon } from "semantic-ui-react";
 
 export default class Header1 extends React.Component {
   state = {
@@ -15,6 +16,12 @@ export default class Header1 extends React.Component {
     });
   };
 
+  onKeyPress = e => {
+    if (e.which === 13) {
+      this.addTodo(this.state.todo);
+    }
+  };
+
   render() {
     return (
       <div className="ui action input">
@@ -22,13 +29,20 @@ export default class Header1 extends React.Component {
           onChange={this.handleChange}
           type="text"
           placeholder="Enter Task..."
+          onKeyPress={this.onKeyPress}
         />
-        <button
+
+        <Button
+          animated
           className="ui positive button"
           onClick={() => this.addTodo(this.state.todo)}
+          type="button"
         >
-          ADD
-        </button>
+          <Button.Content visible>ADD</Button.Content>
+          <Button.Content hidden>
+            <Icon name="arrow right" />
+          </Button.Content>
+        </Button>
       </div>
     );
   }
