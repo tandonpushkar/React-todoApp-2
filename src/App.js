@@ -8,38 +8,10 @@ import Particles from "react-particles-js";
 
 export default class App extends React.Component {
   state = {
-    todos: [
-      {
-        id: 0,
-        todo: "Manage operations"
-      },
-      {
-        id: 1,
-        todo: "Study"
-      },
-      {
-        id: 2,
-        todo: "Making Projects"
-      },
-      {
-        id: 3,
-        todo: "Making Projects"
-      },
-      {
-        id: 4,
-        todo: "Making Projects"
-      },
-      {
-        id: 5,
-        todo: "Making Projects"
-      },
-      {
-        id: 6,
-        todo: "Making Projects"
-      }
-    ],
+    todos: [],
 
-    nextInt: 7
+    nextInt: 0,
+    search: ""
   };
 
   getCurrentDate(separator = "-") {
@@ -71,39 +43,46 @@ export default class App extends React.Component {
     });
   };
 
+  handleSearch = e => {
+    this.setState({
+      search: e.target.value.trim()
+    });
+  };
+
   render() {
+    let FilteredTodo = this.state.todos.filter(t => {
+      return (
+        t.todo.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1
+      );
+    });
     return (
       <div>
-        <Particles
-          params={{
-            particles: {
-              line_linked: {
-                shadow: {
-                  enable: true,
-                  color: "#3CA9D1",
-                  blur: 5
-                }
-              }
-            }
-          }}
-        />
+        <SimpleStorage parent={this} />
+        <Particles />
 
         <div className="todo-wrapper">
-          <SimpleStorage parent={this} />
           <Segment inverted>
             <Header as="h1" inverted color="teal" textAlign="center">
-              React Todo Application
+              React Todo Application by tandonpushkar
             </Header>
           </Segment>
 
           <Container textAlign="center">
-            <Header1 addTodo={this.addTodo} />
+            <Header1 addTodo={this.addTodo} searchTodo={this.searchTodo} />
           </Container>
+          <div className="ui icon input">
+            <input
+              type="text"
+              placeholder="Search..."
+              onChange={this.handleSearch}
+            />
+            <i aria-hidden="true" className="search icon" />
+          </div>
 
           <Divider />
 
           <Card.Group centered>
-            {this.state.todos.map(t => {
+            {FilteredTodo.map(t => {
               return (
                 <Card key={t.id}>
                   <Card.Content>
@@ -111,7 +90,8 @@ export default class App extends React.Component {
                       {t.todo
                         .split(" ")
                         .slice(0, 2)
-                        .join("-")}
+                        .join(" ")}
+                      ...
                     </Card.Header>
                     <Card.Meta>{this.getCurrentDate()}</Card.Meta>
                     <Card.Description>
